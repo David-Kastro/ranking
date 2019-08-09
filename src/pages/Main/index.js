@@ -1,10 +1,18 @@
 import React, {Component} from 'react';
+
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Creators as AuthActions } from "../../store/ducks/Authentication";
+
 import logo from '../../assets/img/logo.svg';
 import './style.css';
 
-export default class Main extends Component {
+class Main extends Component {
 
   render() {
+    
+    const { auth } = this.props;
+
     return (
       <div className="App">
         <header className="App-header">
@@ -25,3 +33,14 @@ export default class Main extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.authReducers,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Main);
