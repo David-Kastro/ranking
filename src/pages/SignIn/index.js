@@ -1,23 +1,38 @@
 import React, {Component} from 'react';
 
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from '../../services/firebase';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Creators as AuthActions } from "../../store/ducks/Authentication";
 
+const uiConfig = {
+  signInFlow: 'popup',
+  signInOptions: [
+    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    firebase.auth.FacebookAuthProvider.PROVIDER_ID
+  ],
+  callbacks: {
+    signInSuccess: () => false
+  }
+};
+
 class Main extends Component {
 
-  componentDidMount() {
+  state = {
+    isAuthenticated:  false
+  }
 
+  componentDidMount() {
     firebase.auth().onAuthStateChanged( user => {
 
-      if( !user ) {
-        this.props.history.push('/Login');
-      }
-      
-    })
-
+        if( user ) {
+          this.props.history.push('/');
+        }
+        
+      })
   }
 
   render() {
@@ -25,12 +40,10 @@ class Main extends Component {
     const { auth }            = this.props;
 
     return (
-      <div style={{textAlign: 'center'}}>
-
-        <h1>Logado</h1>
-        <button onClick={() => firebase.auth().signOut()}>deslogar</button>
-
-      </div>
+        <StyledFirebaseAuth
+            uiConfig={uiConfig} 
+            firebaseAuth={firebase.auth()}
+        />
     );
   }
 }
