@@ -1,11 +1,15 @@
 import React, {Component} from 'react';
 
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import firebase from 'firebase';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Creators as AuthActions } from "../../store/ducks/Authentication";
 
-import logo from '../../assets/img/logo.svg';
-import './style.css';
+import firebaseConfig from '../../config/firebase/firebaseConfig';
+
+firebase.initializeApp(firebaseConfig);
 
 class Main extends Component {
 
@@ -14,21 +18,8 @@ class Main extends Component {
     const { auth } = this.props;
 
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <h1>Main</h1>
       </div>
     );
   }
