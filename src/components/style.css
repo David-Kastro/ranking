@@ -1,0 +1,19 @@
+.loading-bars {
+    transform: scale(.5);
+    opacity: 0;
+    animation-name: FadeIn;
+    animation-delay: .3s;
+    animation-duration: .3s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes FadeIn {
+    from {
+        transform: scale(.5);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

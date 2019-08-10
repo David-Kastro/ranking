@@ -7,14 +7,15 @@ import { bindActionCreators } from 'redux';
 import { Creators as AuthActions } from "../../store/ducks/Authentication";
 
 const SignOut = async () => {
-  try{
+  
+  try {
 
     await firebase.auth().signOut()
 
   } catch( err ) {
 
     console.log( err )
-    
+
   }
   
 }

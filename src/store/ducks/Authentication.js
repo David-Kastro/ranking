@@ -7,9 +7,11 @@ export const { Types, Creators } = createActions({
   SignoutSuccess    : [],
   SignoutError      : ["error"],
   SignoutLoading    : ["loading"],
+  SetLoading        : [],
+  UnsetLoading      : [],
 })
 
-const INITIAL_STATE = { loading: false, isAuthenticated: false, user: null, error: null };
+const INITIAL_STATE = { loading: true, isAuthenticated: false, user: null, error: null };
 
 const SigninSuccess = ( state = INITIAL_STATE, action ) => {
   return { 
@@ -69,6 +71,20 @@ const SignoutLoading = ( state = INITIAL_STATE, action ) => {
   }
 }
 
+const SetLoading = ( state = INITIAL_STATE, action ) => {
+  return { 
+    ...state,
+    loading         : true,
+  }
+}
+
+const UnsetLoading = ( state = INITIAL_STATE, action ) => {
+  return { 
+    ...state,
+    loading         : false,
+  }
+}
+
 export default createReducer( INITIAL_STATE, {
   [Types.SIGNIN_SUCCESS]  : SigninSuccess,
   [Types.SIGNIN_ERROR]    : SigninError,
@@ -76,4 +92,6 @@ export default createReducer( INITIAL_STATE, {
   [Types.SIGNOUT_SUCCESS] : SignoutSuccess,
   [Types.SIGNOUT_ERROR]   : SignoutError,
   [Types.SIGNOUT_LOADING] : SignoutLoading,
+  [Types.SET_LOADING]     : SetLoading,
+  [Types.UNSET_LOADING]   : UnsetLoading,
 })

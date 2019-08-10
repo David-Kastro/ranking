@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import './style.css';
 
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from '../../services/firebase';
 
 import { connect } from 'react-redux';
@@ -10,22 +15,10 @@ import { Creators as AuthActions } from "../../store/ducks/Authentication";
 const GoogleProvider   = new firebase.auth.GoogleAuthProvider();
 const FacebookProvider = new firebase.auth.FacebookAuthProvider();
 
-class Main extends Component {
+class SignIn extends Component {
 
   state = {
-    isAuthenticated:  false
-  }
-
-  _uiConfig = {
-    signInFlow: 'popup',
-    signInOptions: [
-      firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID
-    ],
-    callbacks: {
-      signInSuccess: () => false
-    }
+    loading: false
   }
 
   componentDidMount() {
@@ -33,9 +26,32 @@ class Main extends Component {
 
         if( user ) {
             this.props.history.push('/');
+        } else {
+            this.props.UnsetLoading();
         }
         
     })
+
+  }
+
+  SignInWithProvider( Provider ) {
+
+    firebase.auth().signInWithPopup( Provider )
+        .then( result => {
+            console.log(result.user)
+        })
+        .catch( error => {
+            console.log(error)
+        });
+
+  }
+
+  SignInWithGoogle() {
+    this.SignInWithProvider( GoogleProvider );
+  }
+
+  SignInWithFacebook() {
+    this.SignInWithProvider( FacebookProvider );
   }
 
   render() {
@@ -43,29 +59,13 @@ class Main extends Component {
     const { auth } = this.props;
 
     return (
-        <div style={{display: 'flex', justifyContent: 'center', height: 600, alignItems: 'center', flexDirection: 'column'}}>
-            {/* <StyledFirebaseAuth
-                uiConfig={this._uiConfig} 
-                firebaseAuth={firebase.auth()}
-            /> */}
-            
-            <button onClick={() => {
-                firebase.auth().signInWithPopup(GoogleProvider).then( result => {
-                    console.log(result.user)
-                  }).catch( error => {
-                    console.log(error)
-                  });
-            }}>Google</button>
 
-            <button onClick={() => {
-                firebase.auth().signInWithPopup(FacebookProvider).then( result => {
-                    console.log(result.user)
-                  }).catch( error => {
-                    console.log(error)
-                  });
-            }}>Facebook</button>
-            
-        </div>
+        <Grid container style={{flexGrow: 1, minHeight: '100vh'}} direction="column" align="center" justify="center">
+            <Card className="form">    
+                <Typography>teste</Typography>
+            </Card>
+        </Grid>
+
     );
   }
 }
@@ -79,4 +79,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch)
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Main);
+)(SignIn);
