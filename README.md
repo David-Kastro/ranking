@@ -1,7 +1,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <h3 align="center">Uniplan Ranking - UniRanking (Em desenvolvimento...)</h3>
+  <h3 align="center">Uniplan Ranking - UniRanking</h3>
+  <h5 align="center">(Em desenvolvimento...)</h5>
 </p>
 
 <!-- TABLE OF CONTENTS -->
