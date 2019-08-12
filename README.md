@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <div align="center">
-    <img src="./src/assets/img/uniranking.png" />
+    <img src="./src/assets/img/uniranking.png" width="200px" />
   </div>
   <h5 align="center">(Em desenvolvimento...)</h5>
 </p>
