@@ -4,10 +4,11 @@ import firebase from '../../services/firebase';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Creators as AuthActions } from "../../store/ducks/Authentication";
+import { Creators as AuthActions } from "../../store/ducks/_Authentication";
+import { Creators as LoadingActions } from "../../store/ducks/_Loading";
 
 const SignOut = async () => {
-  
+
   try {
 
     await firebase.auth().signOut()
@@ -27,7 +28,12 @@ class Main extends Component {
     firebase.auth().onAuthStateChanged( user => {
 
       if( !user ) {
+        
         this.props.history.push('/Login');
+        this.props.SignoutSuccess();
+
+      } else {
+        this.props.UnsetLoadingOnly();
       }
       
     })
@@ -35,8 +41,6 @@ class Main extends Component {
   }
 
   render() {
-    
-    const { auth } = this.props;
 
     return (
       <div style={{textAlign: 'center'}}>
@@ -51,9 +55,13 @@ class Main extends Component {
 
 const mapStateToProps = state => ({
   auth: state.authReducers,
+  load: state.loadingReducers,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({
+    ...AuthActions,
+    ...LoadingActions
+}, dispatch);
 
 export default connect(
   mapStateToProps,

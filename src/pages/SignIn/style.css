@@ -1,21 +1,3 @@
 .form {
-    width: 420px; 
-    height: 400px;
-    opacity: 0;
-    transform: translateY( 20px );
-    animation-name: FadeIn;
-    animation-duration: .3s;
-    animation-delay: 2s;
-    animation-fill-mode: forwards;
-}
-
-@keyframes FadeIn {
-    from {
-        opacity: 0;
-        transform: translateY( 20px );
-    }
-    to {
-        opacity: 1;
-        transform: translateY( 0px );
-    }
+    width: 420px;
 }

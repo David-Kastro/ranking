@@ -5,37 +5,37 @@ import './style.css';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Creators as AuthActions } from "../store/ducks/Authentication";
+import { Creators as LoadingActions } from "../../store/ducks/_Loading";
 
-class Loading extends Component {
+class LoadingScreen extends Component {
 
     state = {
         loading: true,
-        className: null,
     }
 
     componentDidUpdate() {
 
-        const { auth } = this.props;
-        console.log( auth.loading )
+        const { load } = this.props;
 
-        if( this.state.loading === auth.loading ) {
+        if( this.state.loading === load.isLoading ) {
             return;
         }
 
-        if( auth.loading ) {
-            this.setState({ loading: true })
+        if( load.isLoading ) {
+            this.setState({ loading: true });
         }
 
-        if( !auth.loading ) {
-            setTimeout(() => this.setState({ loading: false }), 2000);
+        if( !load.isLoading ) {
+            setTimeout(() => {
+                this.setState({ loading: false });
+                this.props.FinishLoading();
+            }, 2000);
         }
     }
 
     render() {
 
         const { loading } = this.state;
-        const { auth }    = this.props;
 
         return(
             <>
@@ -61,12 +61,12 @@ class Loading extends Component {
 }
 
 const mapStateToProps = state => ({
-    auth: state.authReducers,
+    load: state.loadingReducers,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(LoadingActions, dispatch);
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Loading);
+)(LoadingScreen);
