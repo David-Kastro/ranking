@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import Grid from '@material-ui/core/Grid';
+
 import { Bars } from 'svg-loaders-react';
 import './style.css';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Creators as LoadingActions } from "../../store/ducks/_Loading";
+
 
 class LoadingScreen extends Component {
 
@@ -49,7 +51,7 @@ class LoadingScreen extends Component {
                         justify="center"
                         
                     >
-                        <Bars className="loading-bars" fill="#ff4d4d" />
+                        <Bars className="loading-bars" fill="#f50057" />
                     </Grid>
                 )
                 : null

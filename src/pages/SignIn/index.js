@@ -8,10 +8,14 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Grow from '@material-ui/core/Grow';
-import './style.css';
+import Fade from '@material-ui/core/Fade';
+import SignUp from './SignUp';
+import logo from '../../assets/img/uniranking.png';
+import styles from './styles';
 
 import firebase from '../../services/firebase';
 
@@ -31,6 +35,7 @@ class SignIn extends Component {
 		email: '',
 		password: '',
 		passwordVisible: false,	
+		SignUp: false,
 	}
 
 	componentDidMount() {
@@ -66,7 +71,7 @@ class SignIn extends Component {
 						msg: `Já existe uma conta google cadastrada com o mesmo E-mail! Deseja logar com sua conta Google?`,
 						closeText: 'Cancelar',
 						actionText: 'Logar com google',
-						color: 'primary',
+						color: 'secondary',
 						actionHandler: () => {
 							this.SignInWithGoogle();
 							this.props.HideMsg();
@@ -92,9 +97,24 @@ class SignIn extends Component {
 
 		return (
 
-			<Grid container style={{flexGrow: 1, minHeight: '100vh'}} direction="column" align="center" justify="center">
+			<Grid container style={styles.container} direction="column" align="center" justify="center">
+
+				<Fade in={load.isLoadingFinished} timeout={{enter: 1000}}>
+					<div>
+						<img src={logo} style={styles.logo} alt="UniRanking"/>
+
+						<Typography style={styles.welcome} color="primary" variant="h6" component="h1" gutterBottom>
+							Seja bem vindo ao novo sistema de avaliação da Uniplan-DF!
+						</Typography>
+
+						<Typography style={styles.instructions} variant="body2">
+							Faça login para ir à tela principal!
+						</Typography>
+					</div>
+				</Fade>
+
 				<Grow in={load.isLoadingFinished}>
-					<Card className="form">
+					<Card style={styles.form}>
 						<CardContent>
 							<Grid container style={{flexGrow: 1}} spacing={3}>
 								<Grid item xs={12}>
@@ -102,6 +122,7 @@ class SignIn extends Component {
 										id="email"
 										label="Digite seu E-mail..."
 										value={this.state.email}
+										type="email"
 										fullWidth
         								onChange={(event) => this.setState({email: event.target.value})}
 									/>
@@ -131,14 +152,32 @@ class SignIn extends Component {
 									/>
 								</Grid>
 								<Grid item xs={12}>
-									<Grid container style={{display: 'flex', width: '100%', height: 100}} direction="column" justify="space-around">
-										<Button onClick={() => this.SignInWithGoogle()} style={{backgroundColor: 'white'}} variant="contained" fullWidth>
-											<img alt="" style={{width: 26, marginRight: 20}} src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"></img>
-											<span style={{textTransform: 'initial', color: '#595959'}}>Fazer Login com Google</span>
+									<Button variant="contained" fullWidth color="primary" style={{textTransform: 'none'}}>
+										Fazer Login
+									</Button>
+								</Grid>
+								<Grid item xs={12}>
+									<Divider style={{marginTop: 10}} />
+									
+										<Typography
+											color="textSecondary"
+											display="block"
+											variant="caption"
+											style={{marginTop: -12}}
+										>
+											<span style={{backgroundColor:'white', padding: 10}}>OU</span>
+										</Typography>
+									
+								</Grid>
+								<Grid item xs={12}>
+									<Grid container style={styles.socialContainer} direction="column" justify="space-around">
+										<Button onClick={() => this.SignInWithGoogle()} style={styles.googleButton} variant="contained" fullWidth>
+											<img alt="" style={styles.socialIcon} src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"></img>
+											Fazer Login com Google
 										</Button>
-										<Button onClick={() => this.SignInWithFacebook()} style={{backgroundColor: '#3f51b5'}} variant="contained" fullWidth>
-											<img alt="" style={{width: 26, marginRight: 20}} src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/facebook.svg"/>
-											<span style={{textTransform: 'initial', color: 'white'}}>Fazer Login com Facebook</span>
+										<Button onClick={() => this.SignInWithFacebook()} style={styles.facebookButton} variant="contained" fullWidth>
+											<img alt="" style={styles.socialIcon} src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/facebook.svg"/>
+											Fazer Login com Facebook
 										</Button>
 									</Grid>
 								</Grid>
@@ -147,13 +186,14 @@ class SignIn extends Component {
 					</Card>
 				</Grow>
 				<Grow in={load.isLoadingFinished}>
-					<Typography variant="body1" style={{color: '#666666', marginTop: 10}}>
+					<Typography variant="body1" style={styles.signUp}>
 						Ainda não possui cadastro? 
-						<Link style={{margin: 10, cursor: 'pointer'}} color="secondary">
+						<Link style={styles.link} color="primary" onClick={() => this.setState({SignUp: true})}>
 							Inscreva-se aqui!
 						</Link>
 					</Typography>
 				</Grow>
+				<SignUp show={this.state.SignUp} close={() => this.setState({SignUp: false})} />
 			</Grid>
 
 		);
