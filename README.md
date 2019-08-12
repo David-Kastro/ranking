@@ -1,7 +1,9 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <h3 align="center">Uniplan Ranking - UniRanking</h3>
+  <div align="center">
+    <img src="./src/assets/img/uniranking.png" />
+  </div>
   <h5 align="center">(Em desenvolvimento...)</h5>
 </p>
 
