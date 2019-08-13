@@ -2,32 +2,29 @@ import { createActions, createReducer } from 'reduxsauce';
 
 export const { Types, Creators } = createActions({
   SigninSuccess     : ["user"],
-  SigninError       : ["error"],
-  SigninLoading     : ["loading"],
+  SigninError       : [],
+  SigninLoading     : [],
   SignoutSuccess    : [],
-  SignoutError      : ["error"],
-  SignoutLoading    : ["loading"],
+  SignoutError      : [],
+  SignoutLoading    : [],
 })
 
-const INITIAL_STATE = { loading: false, isAuthenticated: false, user: null, error: null };
+const INITIAL_STATE = { loading: false, isAuthenticated: false, user: null };
 
 const SigninSuccess = ( state = INITIAL_STATE, action ) => {
   return { 
     ...state,
     loading         : false,
     isAuthenticated : true, 
-    error           : null,
     user            : action.user,  
   }
 }
 
 const SigninError = ( state = INITIAL_STATE, action ) => {
 
-  console.log( action.error );
   return { 
     ...state,
     loading         : false, 
-    error           : "Signin Error!",
   }
 
 }
@@ -35,9 +32,7 @@ const SigninError = ( state = INITIAL_STATE, action ) => {
 const SigninLoading = ( state = INITIAL_STATE, action ) => {
   return { 
     ...state,
-    loading         : true, 
-    error           : "Signing In!",
-      
+    loading         : true,      
   }
 }
 
@@ -46,26 +41,22 @@ const SignoutSuccess = ( state = INITIAL_STATE, action ) => {
     ...state,
     loading         : false,
     isAuthenticated : false, 
-    error           : null,
     user            : null,  
   }
 }
 
 const SignoutError = ( state = INITIAL_STATE, action ) => {
 
-  console.log( action.error );
   return { 
     ...state,
     loading         : false, 
-    error           : "Signout Error!",
   }
 }
 
 const SignoutLoading = ( state = INITIAL_STATE, action ) => {
   return { 
     ...state,
-    loading         : true, 
-    error           : "Signing Out!", 
+    loading         : true,
   }
 }
 

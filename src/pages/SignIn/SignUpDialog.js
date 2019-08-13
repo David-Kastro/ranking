@@ -2,20 +2,25 @@ import React, {Component} from 'react';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
+import Fade from '@material-ui/core/Fade';
 
-export default class SignUp extends Component {
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Creators as AuthActions } from "../../store/ducks/_Authentication";
+import { Creators as MsgActions } from "../../store/ducks/_Menssage";
+
+class SignUpDialog extends Component {
 
     state = {
         name: '',
@@ -53,16 +58,74 @@ export default class SignUp extends Component {
 
     }
 
+    SignUpWithEmailAndPassword() {
+
+        const { email, password, name } = this.state;
+
+        const {
+            firebase,
+            setGoogleAlreadyExistsMsg,
+            setFacebookAlreadyExistsMsg,
+            setEmailAlreadyExistsMsg,
+        } = this.props;
+
+		this.props.SigninLoading();
+
+		firebase
+			.auth()
+			.fetchSignInMethodsForEmail( email )
+			.then( result => {
+			
+				if( result[0] ) {
+
+					result[0] === 'google.com' 	 && setGoogleAlreadyExistsMsg( email );
+					result[0] === 'facebook.com' && setFacebookAlreadyExistsMsg( email );
+                    result[0] === 'password'     && setEmailAlreadyExistsMsg( email );
+
+                    this.closeDialog();
+
+				} else {
+                    firebase
+                        .auth()
+                        .createUserWithEmailAndPassword( email, password )
+                        .then( ({ user }) => {
+                            
+                            user
+                                .updateProfile({
+                                    displayName: name
+                                })
+                                .catch( err => {
+                                    console.log( err ); // Handle
+                                })
+
+                        })
+                        .catch( err => {
+                            console.log(err); // Handle
+                        });
+				}
+			})
+			.catch( err => {
+
+				this.props.SigninError();
+                console.log(err) // Handle
+                
+			})
+	}
+
     render() {
 
-        const { show } = this.props;
+        const { show, auth } = this.props;
 
         return (
             <Dialog
                 open = {show}
                 maxWidth = "xs"
                 
-            >   
+            > 
+                <Fade in={auth.loading}>
+                    <LinearProgress color="primary" />
+                </Fade>  
+
                 <DialogActions style={{justifyContent: 'flex-start'}}>
                     <Button color="primary" onClick={() => this.closeDialog()}>
                         <ArrowBackIcon style={{margin: 10}} />
@@ -86,7 +149,7 @@ export default class SignUp extends Component {
                         </Grid>
                         <Grid item xs={12} style={{marginBottom: 30}}>
                             <TextField
-                                id="email"
+                                id="signup_email"
                                 label="E-mail*"
                                 type="email"
                                 value={this.state.email}
@@ -97,7 +160,7 @@ export default class SignUp extends Component {
                         </Grid>
                         <Grid item xs={12} style={{marginBottom: 20}}>
                             <TextField
-                                id="password"
+                                id="signup_password"
                                 label="Senha*"
                                 value={this.state.password}
                                 type={this.state.passwordVisible ? 'text' : 'password'}
@@ -126,7 +189,14 @@ export default class SignUp extends Component {
                             </Grid>
                         </Grow>
                         <Grid item xs={12} style={{marginTop: 10, marginBottom: 10}}>
-                            <Button disabled={!this.state.formIsValid} variant="contained" fullWidth color="primary" style={{textTransform: 'none'}}>
+                            <Button 
+                                disabled={!this.state.formIsValid || auth.loading} 
+                                variant="contained" 
+                                fullWidth 
+                                color="primary" 
+                                style={{textTransform: 'none'}}
+                                onClick={() => this.SignUpWithEmailAndPassword()}
+                            >
                                 Cadastrar-se
                             </Button>
                         </Grid>
@@ -137,3 +207,18 @@ export default class SignUp extends Component {
         )
     }
 }
+
+const mapStateToProps = state => ({
+    auth: state.authReducers,
+    msg: state.msgReducers,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+    ...AuthActions,
+    ...MsgActions,
+}, dispatch);
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(SignUpDialog);

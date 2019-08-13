@@ -19,13 +19,13 @@ class PrivateRoute extends Component {
   
         this._removeFirebaseListener = firebase.auth().onAuthStateChanged( user => {
 
-            if( !user ) {
-        
-                this.props.SignoutSuccess();
+            if( user ) {
+                console.log( user )
+                this.props.UnsetLoadingOnly();
         
             } else {
 
-                this.props.UnsetLoadingOnly();
+                this.props.SignoutSuccess();
 
             }
         

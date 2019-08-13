@@ -4,6 +4,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -14,7 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Grow from '@material-ui/core/Grow';
 import Fade from '@material-ui/core/Fade';
-import SignUp from './SignUp';
+import SignUpDialog from './SignUpDialog';
 import logo from '../../assets/img/uniranking.png';
 import styles from './styles';
 
@@ -39,6 +40,14 @@ class SignInComponent extends Component {
 		SignUp: false,
 	}
 
+	_SignInEmailInput = React.createRef();
+
+	SignInEmailInputFocus(email) {
+		this.setState({email});
+		this._SignInEmailInput.current.focus();
+	}
+
+
 	componentDidMount() {
 
 		this.props.StartLoading();
@@ -46,7 +55,7 @@ class SignInComponent extends Component {
 		this._removeFirebaseListener = firebase.auth().onAuthStateChanged( user => {
 
 			if( user ) {
-
+		
 				this.props.StartLoading();
 				this.props.SigninSuccess( user );
 				this.props.history.push('/');
@@ -67,30 +76,62 @@ class SignInComponent extends Component {
 
 	SignInWithProvider( Provider ) {
 
-		firebase.auth().signInWithPopup( Provider )
-			.then( result => {
-				console.log(result.user)
-			})
+		this.props.SigninLoading();
+		
+		firebase
+			.auth()
+			.signInWithPopup( Provider )
 			.catch( error => {
 
 				const { code, email } = error;
+				this.props.SigninError();
 
 				if( code === 'auth/account-exists-with-different-credential' ) {
-					this.props.SetMsg({
-						title: `O E-mail "${email}" já está cadastrado!`,
-						msg: `Já existe uma conta google cadastrada com o mesmo E-mail! Deseja logar com sua conta Google?`,
-						closeText: 'Cancelar',
-						actionText: 'Logar com google',
-						color: 'secondary',
-						actionHandler: () => {
-							this.SignInWithGoogle();
-							this.props.HideMsg();
-						}
-					});
+					this.setGoogleAlreadyExistsMsg( email );
 				}
-				console.log( code );
+
+				console.log( code ); //Handle
 			});
 
+	}
+
+	setField( field, value ) {
+        this.setState({
+            [field]: value,
+        })
+    }
+
+	SignInWithEmailAndPassword() {
+
+		const { email, password } = this.state;
+
+		this.props.SigninLoading();
+
+		firebase
+			.auth()
+			.fetchSignInMethodsForEmail( email )
+			.then( result => {
+			
+				if( result[0] && result[0] !== 'password' ) {
+
+					result[0] === 'google.com' 	 && this.setGoogleAlreadyExistsMsg( email );
+					result[0] === 'facebook.com' && this.setFacebookAlreadyExistsMsg( email );
+
+				} else {
+
+					firebase
+						.auth()
+						.signInWithEmailAndPassword( email, password )
+						.catch( err => {
+							this.props.SigninError();
+							console.log( err ); //Handle
+						});
+				}
+			})
+			.catch(err => {
+				this.props.SigninError();
+				console.log(err) // Handle
+			})
 	}
 
 	SignInWithGoogle() {
@@ -101,9 +142,54 @@ class SignInComponent extends Component {
 		this.SignInWithProvider( FacebookProvider );
 	}
 
+	setGoogleAlreadyExistsMsg( email ) {
+		this.props.SigninError();
+		this.props.SetMsg({
+			title: `O E-mail "${email}" já está cadastrado!`,
+			msg: `Já existe uma conta do google cadastrada com o mesmo E-mail! Deseja logar com sua conta Google?`,
+			closeText: 'Cancelar',
+			actionText: 'Logar com google',
+			color: 'secondary',
+			actionHandler: () => {
+				this.SignInWithGoogle();
+				this.props.HideMsg();
+			}
+		});
+	}
+
+	setFacebookAlreadyExistsMsg( email ) {
+		this.props.SigninError();
+		this.props.SetMsg({
+			title: `O E-mail "${email}" já está cadastrado!`,
+			msg: `Já existe uma conta do facebook cadastrada com o mesmo E-mail! Deseja logar com sua conta Facebook?`,
+			closeText: 'Cancelar',
+			actionText: 'Logar com Facebook',
+			color: 'secondary',
+			actionHandler: () => {
+				this.SignInWithFacebook();
+				this.props.HideMsg();
+			}
+		});
+	}
+
+	setEmailAlreadyExistsMsg( email ) {
+		this.props.SigninError();
+		this.props.SetMsg({
+			title: `O E-mail "${email}" já está cadastrado!`,
+			msg: `Já existe uma conta cadastrada com o mesmo E-mail! Deseja logar com essa conta?`,
+			closeText: 'Cancelar',
+			actionText: 'Fazer Login',
+			color: 'secondary',
+			actionHandler: () => {
+				this.SignInEmailInputFocus( email );
+				this.props.HideMsg();
+			}
+		});
+	}
+
 	render() {
 		
-		const { load } = this.props;
+		const { load, auth } = this.props;
 
 		return (
 
@@ -113,7 +199,7 @@ class SignInComponent extends Component {
 					<div>
 						<img src={logo} style={styles.logo} alt="UniRanking"/>
 
-						<Typography style={styles.welcome} color="primary" variant="h6" component="h1" gutterBottom>
+						<Typography style={styles.welcome} color="primary" variant="subtitle1" component="h1" gutterBottom>
 							Seja bem vindo ao novo sistema de avaliação da Uniplan-DF!
 						</Typography>
 
@@ -125,16 +211,22 @@ class SignInComponent extends Component {
 
 				<Grow in={load.isLoadingFinished}>
 					<Card style={isWidthUp('sm', this.props.width) ? styles.form : styles.form_sm}>
+
+						<Fade in={auth.loading}>
+							<LinearProgress color="primary" />
+						</Fade>
+
 						<CardContent>
 							<Grid container style={{flexGrow: 1}} spacing={3}>
 								<Grid item xs={12}>
 									<TextField
+										ref={this._SignInEmailInput}
 										id="email"
 										label="Digite seu E-mail..."
 										value={this.state.email}
 										type="email"
 										fullWidth
-        								onChange={(event) => this.setState({email: event.target.value})}
+        								onChange={(event) => this.setField('email', event.target.value)}
 									/>
 								</Grid>
 								<Grid item xs={12}>
@@ -144,7 +236,7 @@ class SignInComponent extends Component {
 										value={this.state.password}
 										type={this.state.passwordVisible ? 'text' : 'password'}
 										fullWidth
-        								onChange={(event) => this.setState({password: event.target.value})}
+        								onChange={(event) => this.setField('password', event.target.value)}
 										InputProps={{
 											endAdornment: (
 												<InputAdornment position="end">
@@ -162,7 +254,7 @@ class SignInComponent extends Component {
 									/>
 								</Grid>
 								<Grid item xs={12}>
-									<Button onClick={() => this.SignInWithEmail()} variant="contained" fullWidth color="primary" style={{textTransform: 'none'}}>
+									<Button disabled={auth.loading} onClick={() => this.SignInWithEmailAndPassword()} variant="contained" fullWidth color="primary" style={{textTransform: 'none'}}>
 										Fazer Login
 									</Button>
 								</Grid>
@@ -196,14 +288,21 @@ class SignInComponent extends Component {
 					</Card>
 				</Grow>
 				<Grow in={load.isLoadingFinished}>
-					<Typography variant="body1" style={styles.signUp}>
+					<Typography variant="body2" style={styles.signUp}>
 						Ainda não possui cadastro? 
 						<Link style={styles.link} color="primary" onClick={() => this.setState({SignUp: true})}>
 							Inscreva-se aqui!
 						</Link>
 					</Typography>
 				</Grow>
-				<SignUp show={this.state.SignUp} close={() => this.setState({SignUp: false})} />
+				<SignUpDialog 
+					show={this.state.SignUp} 
+					close={() => this.setState({SignUp: false})} 
+					firebase={firebase} 
+					setGoogleAlreadyExistsMsg={(email) => this.setGoogleAlreadyExistsMsg(email)}
+					setFacebookAlreadyExistsMsg={(email) => this.setFacebookAlreadyExistsMsg(email)}
+					setEmailAlreadyExistsMsg={(email) => this.setEmailAlreadyExistsMsg(email)}
+				/>
 			</Grid>
 
 		);
