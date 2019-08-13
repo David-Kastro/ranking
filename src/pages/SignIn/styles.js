@@ -1,11 +1,8 @@
 const styles = {
 
     form: {
+        width: '95%',
         maxWidth: 420,
-    },
-
-    form_sm: {
-        maxWidth: '90%',
     },
 
     container: {

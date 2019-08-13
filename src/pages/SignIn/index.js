@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import withWidth, { isWidthUp } from '@material-ui/core/withWidth'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
@@ -30,7 +29,7 @@ import { Creators as MsgActions } from "../../store/ducks/_Menssage";
 const GoogleProvider   = new firebase.auth.GoogleAuthProvider();
 const FacebookProvider = new firebase.auth.FacebookAuthProvider();
 
-class SignInComponent extends Component {
+class SignIn extends Component {
 
 
 	state = {
@@ -210,7 +209,7 @@ class SignInComponent extends Component {
 				</Fade>
 
 				<Grow in={load.isLoadingFinished}>
-					<Card style={isWidthUp('sm', this.props.width) ? styles.form : styles.form_sm}>
+					<Card style={styles.form}>
 
 						<Fade in={auth.loading}>
 							<LinearProgress color="primary" />
@@ -308,8 +307,6 @@ class SignInComponent extends Component {
 		);
 	}
 }
-
-const SignIn = withWidth()(SignInComponent);
 
 const mapStateToProps = state => ({
   auth: state.authReducers,

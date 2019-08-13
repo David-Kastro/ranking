@@ -7,6 +7,8 @@ import { bindActionCreators } from 'redux';
 import { Creators as AuthActions } from "../../store/ducks/_Authentication";
 import { Creators as LoadingActions } from "../../store/ducks/_Loading";
 
+import Professors from './Professors';
+
 const SignOut = async () => {
 
   try {
@@ -31,7 +33,10 @@ class Main extends Component {
         <h1>Logado</h1>
         <button onClick={() => SignOut()}>deslogar</button>
 
+        {/* <Professors/> */}
+
       </div>
+
     );
   }
 }

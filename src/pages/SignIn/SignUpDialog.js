@@ -119,8 +119,7 @@ class SignUpDialog extends Component {
         return (
             <Dialog
                 open = {show}
-                maxWidth = "xs"
-                
+                maxWidth = "xs"   
             > 
                 <Fade in={auth.loading}>
                     <LinearProgress color="primary" />
