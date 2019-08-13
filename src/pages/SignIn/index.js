@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
@@ -28,7 +29,7 @@ import { Creators as MsgActions } from "../../store/ducks/_Menssage";
 const GoogleProvider   = new firebase.auth.GoogleAuthProvider();
 const FacebookProvider = new firebase.auth.FacebookAuthProvider();
 
-class SignIn extends Component {
+class SignInComponent extends Component {
 
 
 	state = {
@@ -42,18 +43,27 @@ class SignIn extends Component {
 
 		this.props.StartLoading();
 
-		firebase.auth().onAuthStateChanged( user => {
+		this._removeFirebaseListener = firebase.auth().onAuthStateChanged( user => {
 
 			if( user ) {
+
+				this.props.StartLoading();
 				this.props.SigninSuccess( user );
 				this.props.history.push('/');
+
 			} else {
+
 				this.props.UnsetLoadingOnly();
+
 			}
 			
 		})
 
 	}
+
+	componentWillUnmount() {
+        this._removeFirebaseListener();
+    }
 
 	SignInWithProvider( Provider ) {
 
@@ -114,7 +124,7 @@ class SignIn extends Component {
 				</Fade>
 
 				<Grow in={load.isLoadingFinished}>
-					<Card style={styles.form}>
+					<Card style={isWidthUp('sm', this.props.width) ? styles.form : styles.form_sm}>
 						<CardContent>
 							<Grid container style={{flexGrow: 1}} spacing={3}>
 								<Grid item xs={12}>
@@ -152,7 +162,7 @@ class SignIn extends Component {
 									/>
 								</Grid>
 								<Grid item xs={12}>
-									<Button variant="contained" fullWidth color="primary" style={{textTransform: 'none'}}>
+									<Button onClick={() => this.SignInWithEmail()} variant="contained" fullWidth color="primary" style={{textTransform: 'none'}}>
 										Fazer Login
 									</Button>
 								</Grid>
@@ -199,6 +209,8 @@ class SignIn extends Component {
 		);
 	}
 }
+
+const SignIn = withWidth()(SignInComponent);
 
 const mapStateToProps = state => ({
   auth: state.authReducers,

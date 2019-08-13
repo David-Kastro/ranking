@@ -23,23 +23,6 @@ const SignOut = async () => {
 
 class Main extends Component {
 
-  componentDidMount() {
-
-    firebase.auth().onAuthStateChanged( user => {
-
-      if( !user ) {
-        
-        this.props.history.push('/Login');
-        this.props.SignoutSuccess();
-
-      } else {
-        this.props.UnsetLoadingOnly();
-      }
-      
-    })
-
-  }
-
   render() {
 
     return (
