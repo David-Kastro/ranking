@@ -1,0 +1,1 @@
+[!] Pegar todas as chamadas dos metodos do firebase ( ex. SigninWithEmailAndPassword, CreateUser.., AuthStateChange, getUsers e etc ) e transformar em Actions do redux!! 

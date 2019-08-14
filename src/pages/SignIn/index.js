@@ -18,6 +18,8 @@ import SignUpDialog from './SignUpDialog';
 import logo from '../../assets/img/uniranking.png';
 import styles from './styles';
 
+import getUserByDocument from '../../services/Users/getUserByDocument';
+import setUser from '../../services/Users/setUser';
 import firebase from '../../services/firebase';
 
 import { connect } from 'react-redux';
@@ -35,6 +37,7 @@ class SignIn extends Component {
 	state = {
 		email: '',
 		password: '',
+		name: '',
 		passwordVisible: false,	
 		SignUp: false,
 	}
@@ -51,13 +54,51 @@ class SignIn extends Component {
 
 		this.props.StartLoading();
 
-		this._removeFirebaseListener = firebase.auth().onAuthStateChanged( user => {
+		this._removeFirebaseListener = firebase.auth().onAuthStateChanged( async user => {
 
 			if( user ) {
-		
-				this.props.StartLoading();
-				this.props.SigninSuccess( user );
-				this.props.history.push('/');
+				
+				try {
+
+					const name = this.state.name 
+						? this.state.name
+						: user.email;
+
+					const displayName = user.displayName
+						? user.displayName
+						: name;
+
+					if( !user.displayName ) {
+
+						await user.updateProfile({ displayName: displayName })
+
+					}
+
+                    const userData = await getUserByDocument( user.uid );
+
+                    if( !userData ) {
+
+                        const data = {
+                            displayName: displayName,
+                            email: user.email,
+                            photoURL: user.photoURL,
+                            perfil: 'aluno'
+                        }
+
+						await setUser( user.uid, data );
+
+					}
+					
+					this.props.StartLoading();
+					this.props.SigninSuccess( user );
+					this.props.history.push('/');
+                    
+                } catch(err) {
+
+					console.log(err); // Handle
+					this.props.UnsetLoadingOnly();
+					
+                }
 
 			} else {
 
@@ -297,6 +338,8 @@ class SignIn extends Component {
 				<SignUpDialog 
 					show={this.state.SignUp} 
 					close={() => this.setState({SignUp: false})} 
+					nameValue={this.state.name}
+					setName={(value) => this.setState({name: value})}
 					firebase={firebase} 
 					setGoogleAlreadyExistsMsg={(email) => this.setGoogleAlreadyExistsMsg(email)}
 					setFacebookAlreadyExistsMsg={(email) => this.setFacebookAlreadyExistsMsg(email)}

@@ -23,7 +23,6 @@ import { Creators as MsgActions } from "../../store/ducks/_Menssage";
 class SignUpDialog extends Component {
 
     state = {
-        name: '',
         email: '',
 		password: '',
 		passwordVisible: false,	
@@ -32,8 +31,10 @@ class SignUpDialog extends Component {
     }
 
     checkFormIsValid() {
+        const { nameValue } = this.props;
+
         this.setState({
-            formIsValid: !!this.state.name && !!this.state.email && !!this.state.password,
+            formIsValid: nameValue && !!this.state.email && !!this.state.password,
         })
     }
 
@@ -45,8 +46,8 @@ class SignUpDialog extends Component {
 
     closeDialog() {
 
+        const { setName } = this.props
         this.setState({
-            name: '',
             email: '',
             password: '',
             passwordVisible: false,	
@@ -54,6 +55,8 @@ class SignUpDialog extends Component {
             formIsValid: null,
         });
 
+        setName('');
+        
         this.props.close();
 
     }
@@ -88,17 +91,6 @@ class SignUpDialog extends Component {
                     firebase
                         .auth()
                         .createUserWithEmailAndPassword( email, password )
-                        .then( ({ user }) => {
-                            
-                            user
-                                .updateProfile({
-                                    displayName: name
-                                })
-                                .catch( err => {
-                                    console.log( err ); // Handle
-                                })
-
-                        })
                         .catch( err => {
                             console.log(err); // Handle
                         });
@@ -114,7 +106,7 @@ class SignUpDialog extends Component {
 
     render() {
 
-        const { show, auth } = this.props;
+        const { show, auth, setName, nameValue } = this.props;
 
         return (
             <Dialog
@@ -140,9 +132,9 @@ class SignUpDialog extends Component {
                                 id="name"
                                 label="Nome*"
                                 type="text"
-                                value={this.state.name}
+                                value={nameValue}
                                 fullWidth
-                                onChange={(event) => this.setField('name', event.target.value)}
+                                onChange={(event) => setName(event.target.value)}
                                 onKeyUp={() => this.checkFormIsValid()}
                             />
                         </Grid>

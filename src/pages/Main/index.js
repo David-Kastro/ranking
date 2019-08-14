@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import { Creators as AuthActions } from "../../store/ducks/_Authentication";
 import { Creators as LoadingActions } from "../../store/ducks/_Loading";
 
+import getUsers from '../../services/Users/getUsers';
 import Professors from './Professors';
 
 const SignOut = async () => {
@@ -24,6 +25,11 @@ const SignOut = async () => {
 }
 
 class Main extends Component {
+
+  async componentDidMount() {
+    // const users = await getUsers();
+    // console.log( users );
+  }
 
   render() {
 
