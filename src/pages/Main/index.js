@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import { Grid } from '@material-ui/core';
-
-// import firebase from '../../services/firebase';
+import { Grid, Typography } from '@material-ui/core';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -13,7 +11,7 @@ import getUsersByRole from '../../services/Users/getUsersByRole';
 
 import TopBar from './TopBar';
 import Professors from './Professors';
-import CoursesGraph from './CoursesGraph';
+import SearchBar from './SearchBar';
 
 class Main extends Component {
 
@@ -27,7 +25,6 @@ class Main extends Component {
   }
 
   render() {
-    const { professors, auth, load } = this.props;
 
     return (
       <Grid container style={{flexGrow: 1}} direction="row">
@@ -36,13 +33,14 @@ class Main extends Component {
           <TopBar />
         </Grid>
 
-        <Grid item sm={12} md={6}>
+        <Grid item sm={12} md={12}>
+          <SearchBar />
+        </Grid>
+
+        <Grid item sm={12} md={12}>
           <Professors />
         </Grid>
 
-        <Grid item sm={12} md={6}>
-          <CoursesGraph />
-        </Grid>
       </Grid>
     );
   }

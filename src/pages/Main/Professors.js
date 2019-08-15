@@ -63,10 +63,10 @@ class Professors extends Component {
                             <List>
                                 { professors.professors.map( (professor, index) => (
                                     <div key={professor.uid}>
-                                        <ListItem alignItems="flex-start">
+                                        <ListItem button={!professors.loading} alignItems="flex-start">
 
                                             <ListItemAvatar>
-                                                <Badge badgeContent={`#${professor.rank}`} color={index < 1 ? "secondary" : "primary"}>
+                                                <Badge badgeContent={`#${professor.rank}`} color={index > 0 ? "secondary" : "primary"}>
                                                 {
                                                     professor.photoURL
                                                         ? (<Avatar alt={professor.displayName} src={professor.photoURL} />)
