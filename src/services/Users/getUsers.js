@@ -5,14 +5,14 @@ const usuariosRef = db.collection("usuarios");
 
 const fetchResult = ( result ) => {
     
-    let data = {};
+    let data = [];
 
     if( result.empty ) {
         return data;
     }
 
     result.forEach( user => {
-        data = { ...data, [user.id]: {uid: user.id, ...user.data()} };
+        data = [ ...data, {uid: user.id, ...user.data()} ];
     });
 
     return data;

@@ -63,7 +63,7 @@ class SignUpDialog extends Component {
 
     SignUpWithEmailAndPassword() {
 
-        const { email, password, name } = this.state;
+        const { email, password } = this.state;
 
         const {
             firebase,

@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.3.1",
     "@material-ui/icons": "^4.2.1",
+    "@material-ui/lab": "^4.0.0-alpha.23",
     "@material-ui/styles": "^4.3.0",
     "connected-react-router": "^6.5.2",
     "firebase": "^6.3.5",
@@ -14,6 +15,7 @@
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
+    "recharts": "^1.7.1",
     "redux": "^4.0.4",
     "reduxsauce": "^1.1.0",
     "svg-loaders-react": "^2.0.1"

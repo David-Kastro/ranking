@@ -74,23 +74,24 @@ class SignIn extends Component {
 
 					}
 
-                    const userData = await getUserByDocument( user.uid );
-
-                    if( !userData ) {
-
-                        const data = {
+					const getUser  = await getUserByDocument( user.uid );
+					const userData = getUser
+						? getUser
+						: {
                             displayName: displayName,
                             email: user.email,
                             photoURL: user.photoURL,
                             perfil: 'aluno'
-                        }
+                          }
+					
+                    if( !getUser ) {
 
-						await setUser( user.uid, data );
+						await setUser( user.uid, userData );
 
 					}
 					
 					this.props.StartLoading();
-					this.props.SigninSuccess( user );
+					this.props.SigninSuccess( {uid: user.uid, ...userData} );
 					this.props.history.push('/');
                     
                 } catch(err) {

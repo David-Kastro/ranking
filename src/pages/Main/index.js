@@ -1,48 +1,49 @@
 import React, {Component} from 'react';
+import { Grid } from '@material-ui/core';
 
-import firebase from '../../services/firebase';
+// import firebase from '../../services/firebase';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Creators as AuthActions } from "../../store/ducks/_Authentication";
 import { Creators as LoadingActions } from "../../store/ducks/_Loading";
+import { Creators as ProfessorsActions } from "../../store/ducks/_Professors";
 
-import getUsers from '../../services/Users/getUsers';
+import getUsersByRole from '../../services/Users/getUsersByRole';
+
+import TopBar from './TopBar';
 import Professors from './Professors';
-
-const SignOut = async () => {
-
-  try {
-
-    await firebase.auth().signOut()
-
-  } catch( err ) {
-
-    console.log( err )
-
-  }
-  
-}
+import CoursesGraph from './CoursesGraph';
 
 class Main extends Component {
 
   async componentDidMount() {
-    // const users = await getUsers();
-    // console.log( users );
+    
+    this.props.LoadProfessors();
+
+    const professors = await getUsersByRole( 'professor' );
+    this.props.SetProfessors( professors );
+
   }
 
   render() {
+    const { professors, auth, load } = this.props;
 
     return (
-      <div style={{textAlign: 'center'}}>
+      <Grid container style={{flexGrow: 1}} direction="row">
 
-        <h1>Logado</h1>
-        <button onClick={() => SignOut()}>deslogar</button>
+        <Grid item xs={12}>
+          <TopBar />
+        </Grid>
 
-        {/* <Professors/> */}
+        <Grid item sm={12} md={6}>
+          <Professors />
+        </Grid>
 
-      </div>
-
+        <Grid item sm={12} md={6}>
+          <CoursesGraph />
+        </Grid>
+      </Grid>
     );
   }
 }
@@ -50,11 +51,13 @@ class Main extends Component {
 const mapStateToProps = state => ({
   auth: state.authReducers,
   load: state.loadingReducers,
+  professors: state.professorsReducers,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     ...AuthActions,
-    ...LoadingActions
+    ...LoadingActions,
+    ...ProfessorsActions
 }, dispatch);
 
 export default connect(
