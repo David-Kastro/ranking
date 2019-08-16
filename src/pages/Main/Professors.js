@@ -51,17 +51,17 @@ class Professors extends Component {
                             <Fade in={professors.loading}>
                                 <LinearProgress color="primary" />
                             </Fade>
-                            <Fade in={!professors.loading}>
-                                <Container>
-                                    <Grid container style={{flexGrow: 1, marginTop: 10, marginBottom: 10}} direction="row" alignItems="center">
-                                        <Typography style={{marginRight: 10, color: '#999999'}} variant="h6">#</Typography>
-                                        <Typography variant="h5" color="primary">Ranking</Typography>
-                                    </Grid>
-                                    <Divider></Divider>
-                                </Container>
-                            </Fade>
+                            
+                            <Container>
+                                <Grid container style={{flexGrow: 1, marginTop: 10, marginBottom: 10}} direction="row" alignItems="center">
+                                    <Typography style={{marginRight: 10, color: '#999999'}} variant="h6">#</Typography>
+                                    <Typography variant="h5" color={!professors.loading ? "primary" : "textSecondary"}>Ranking</Typography>
+                                </Grid>
+                                <Divider></Divider>
+                            </Container>
+                            
                             <List>
-                                { professors.professors.map( (professor, index) => (
+                                { !professors.loading && professors.professors.map( (professor, index) => (
                                     <div key={professor.uid}>
                                         <ListItem button={!professors.loading} alignItems="flex-start">
 
@@ -89,7 +89,7 @@ class Professors extends Component {
                                                                 component="span"
                                                                 variant="body2"
                                                             >
-                                                                { this.ellipsisText('Professor(a) do curso de análise e desenvolvimento de sistemas.', 100)}
+                                                                { professor.bio ? this.ellipsisText(professor.bio, 100) : ''}
                                                             </Typography>
                                                             
                                                         </React.Fragment>

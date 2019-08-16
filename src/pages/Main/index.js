@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Grid, Typography } from '@material-ui/core';
+import debounce from 'lodash/debounce';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -24,6 +25,30 @@ class Main extends Component {
 
   }
 
+  searchProfessors = debounce( (search) => {
+
+    const {professors, SetProfessors} = this.props;
+
+    setTimeout(() => {
+
+      console.log( search );
+      SetProfessors( professors.professors );
+
+    }, 500)
+
+  }, 500)
+
+  onSearch( search ) {
+    const {professors, LoadProfessors, SetProfessors} = this.props;
+
+    if( !professors.loading ) {
+      LoadProfessors();
+    }
+
+    this.searchProfessors(search)
+
+  }
+
   render() {
 
     return (
@@ -34,7 +59,7 @@ class Main extends Component {
         </Grid>
 
         <Grid item sm={12} md={12}>
-          <SearchBar />
+          <SearchBar onSearch={(search) => this.onSearch(search)} />
         </Grid>
 
         <Grid item sm={12} md={12}>

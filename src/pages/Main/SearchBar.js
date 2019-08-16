@@ -20,6 +20,7 @@ import { Creators as ProfessorsActions } from "../../store/ducks/_Professors";
 class SearchBar extends Component {
 
     render() {
+        const { onSearch } = this.props;
 
         return (
 
@@ -32,6 +33,7 @@ class SearchBar extends Component {
                         style={{marginLeft: 8, flex: 1}}
                         placeholder="Buscar professor"
                         inputProps={{ 'aria-label': 'buscar professor' }}
+                        onChange={(event) => onSearch( event.target.value )}
                     />
                     <IconButton style={{padding: 10}} aria-label="search">
                         <SearchIcon />
