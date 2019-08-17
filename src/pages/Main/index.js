@@ -16,10 +16,16 @@ class Main extends Component {
 
   async componentDidMount() {
     
-    this.props.LoadProfessors();
+    const { professors } = this.props;
 
-    const professors = await getUsersByRole( 'professor' );
-    this.props.SetProfessors( professors );
+    if( !professors.isSetted ) {
+
+      this.props.LoadProfessors();
+
+      const professors = await getUsersByRole( 'professor' );
+      this.props.SetProfessors( professors );
+
+    }
 
   }
 
@@ -34,7 +40,7 @@ class Main extends Component {
     return (
       <Grid container style={{flexGrow: 1}} direction="row">
 
-        <Grid item sm={12} md={12} style={{marginTop: 10}}>
+        <Grid item sm={12} md={12} style={{marginTop: 10, zIndex: 99}}>
           <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
             <Zoom in={!professors.loading}>
               <Button

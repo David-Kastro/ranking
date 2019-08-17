@@ -120,7 +120,7 @@ class SearchBar extends Component {
     }
 
     render() {
-        const { onSearch, auth } = this.props;
+        const { auth } = this.props;
 
         return (
           <>

@@ -7,7 +7,7 @@ export const { Types, Creators } = createActions({
   UnsetCurrentProfessor : [],
 })
 
-const INITIAL_STATE = { professors: [], currentProfessor: null, loading: false };
+const INITIAL_STATE = { professors: [], currentProfessor: null, isSetted: false, loading: false };
 
 const LoadProfessors = ( state = INITIAL_STATE, action ) => {
     return { 
@@ -20,6 +20,7 @@ const SetProfessors = ( state = INITIAL_STATE, action ) => {
   return { 
     ...state,
     professors  : action.professors,
+    isSetted    : true,
     loading     : false,
   }
 }
