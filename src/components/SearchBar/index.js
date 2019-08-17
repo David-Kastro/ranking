@@ -78,6 +78,11 @@ class SearchBar extends Component {
         
     }
 
+    Sair() {
+      this.closeMenu();
+      this.SignOut();
+    }
+
     openMenu(event) {
         this.setState({
             anchorEl: event.currentTarget
@@ -155,7 +160,7 @@ class SearchBar extends Component {
                                   open={Boolean(this.state.anchorEl)}
                                   onClose={() => this.closeMenu()}
                               >
-                                  <StyledMenuItem onClick={() => this.SignOut()}>
+                                  <StyledMenuItem onClick={() => this.Sair()}>
                                       <ListItemIcon>
                                           <PowerSettingsNewIcon />
                                       </ListItemIcon>
