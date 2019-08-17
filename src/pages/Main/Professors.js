@@ -39,7 +39,7 @@ class Professors extends Component {
     }
 
     render() {
-        const {professors, load} = this.props;
+        const {professors, load, goToProfessor} = this.props;
         const {iterations}       = this.state;
 
         return (
@@ -63,7 +63,11 @@ class Professors extends Component {
                             <List>
                                 { !professors.loading && professors.professors.map( (professor, index) => (
                                     <div key={professor.uid}>
-                                        <ListItem button={!professors.loading} alignItems="flex-start">
+                                        <ListItem 
+                                            button={!professors.loading} 
+                                            alignItems="flex-start" 
+                                            onClick={() => goToProfessor( professor.uid )}
+                                        >
 
                                             <ListItemAvatar>
                                                 <Badge badgeContent={`#${professor.rank}`} color={index > 0 ? "secondary" : "primary"}>
