@@ -109,7 +109,7 @@ class Professors extends Component {
                                             </Grid>
                                             
                                         </ListItem>
-                                        {index !== (professors.professors.length - 1) ? <Divider variant="inset" component="li" /> : null}
+                                        {index !== ( professors.professors.length - 1 ) ? <Divider variant="inset" component="li" /> : null}
                                     </div> 
                                 ))}
 
@@ -121,22 +121,22 @@ class Professors extends Component {
                                                     <ListItem alignItems="flex-start">
                 
                                                         <ListItemAvatar>
-                                                            <Avatar />
+                                                            <Avatar style={{backgroundColor: '#e6e6e6'}} />
                                                         </ListItemAvatar>
                                                         <ListItemText
                                                             primary={
-                                                                <span style={{color: '#cccccc', backgroundColor: "#cccccc"}}>Brunch this weekend?</span>
+                                                                <span style={{color: '#e6e6e6', backgroundColor: "#e6e6e6"}}>Brunch this weekend?</span>
                                                             }
                                                             secondary={
                                                                 <React.Fragment>
                                                                     <Typography
                                                                         component="span"
                                                                         variant="body2"
-                                                                        style={{color: '#cccccc', backgroundColor: "#cccccc"}}
+                                                                        style={{color: '#e6e6e6', backgroundColor: "#e6e6e6"}}
                                                                     >
                                                                         Ali Connors
                                                                     </Typography>
-                                                                    <span style={{color: '#cccccc', backgroundColor: "#cccccc"}}>— I'll be in your neighborhood doing errands this…</span>
+                                                                    <span style={{color: '#e6e6e6', backgroundColor: "#e6e6e6"}}>— I'll be in your neighborhood doing errands this…</span>
                                                                 </React.Fragment>
                                                             }
                                                         />

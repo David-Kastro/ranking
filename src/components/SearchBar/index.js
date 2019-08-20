@@ -97,11 +97,15 @@ class SearchBar extends Component {
 
     searchProfessors = debounce( (search) => {
 
-      const {professors, SetProfessors} = this.props;
+      const {professors, SetProfessors, history} = this.props;
+      
+      if( history.location.pathname !== '/' ) 
+      {
+        history.push('/');
+      }
   
       setTimeout(() => {
   
-        console.log( search );
         SetProfessors( professors.professors );
   
       }, 500)

@@ -17,7 +17,7 @@ const Routes = () => (
     <Route 
       render={({ location }) => (
         <>
-        <SearchBar/>
+        <Route location={ location } component={SearchBar}/>
         <Switch location={ location }>
           <PrivateRoute exact path="/" component={Main} />
           <PrivateRoute exact path="/Professor/:uid" component={Professor} />

@@ -5,6 +5,7 @@ import authReducers from './_Authentication';
 import loadingReducers from './_Loading';
 import msgReducers from './_Menssage';
 import professorsReducers from './_Professors';
+import avaliationsReducers from './_Avaliations';
 
 export default ( history ) => combineReducers({
   
@@ -12,6 +13,7 @@ export default ( history ) => combineReducers({
   loadingReducers,
   msgReducers,
   professorsReducers,
+  avaliationsReducers,
 
   router: connectRouter( history ),
 });
