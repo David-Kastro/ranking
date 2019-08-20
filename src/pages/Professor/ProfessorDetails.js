@@ -14,7 +14,7 @@ class ProfessorDetails extends Component {
 
         return (
             <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
-                <Grid item xs={5}>
+                
                     <Grow in={true} timeout={500}>
                         <Card style={{width: 600, height: 600}}>
                             <Fade in={true}>
@@ -22,7 +22,7 @@ class ProfessorDetails extends Component {
                             </Fade>
                         </Card>
                     </Grow>
-                </Grid>
+                
             </Grid>
         );
     }

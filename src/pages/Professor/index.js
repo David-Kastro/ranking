@@ -45,7 +45,7 @@ class Professor extends Component {
                             <ProfessorDetails />
                         </Grid>
 
-                        <Grid item xs={4}>
+                        <Grid item xs={5}>
                             <Avaliations />
                         </Grid>
                     </Grid>

@@ -34,7 +34,7 @@ class Avaliations extends Component {
 
         return (
             <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
-                <Grid container style={{flexGrow: 1, marginTop: 10, marginBottom: 10, marginLeft:50}} direction="row" alignItems="center">
+                <Grid container style={{flexGrow: 1, marginTop: 10, marginBottom: 10, paddingLeft: 60}} direction="row" alignItems="center">
                     <Typography style={{marginRight: 10, color: '#999999'}} variant="h6">#</Typography>
                     <Typography variant="h5" color="primary">Avaliações</Typography>
                 </Grid>
@@ -47,7 +47,7 @@ class Avaliations extends Component {
                                     {iterations.map( (val, index) => (
                                         <div key={val}>
                                             <Grow in={true} timeout={500 + (index * 200)}>
-                                                <Card style={{width:450, margin: 10}}>
+                                                <Card style={{width:500, margin: 10}}>
                                                     <CardHeader
                                                         avatar={
                                                             <Avatar style={{backgroundColor: '#e6e6e6'}} />
@@ -77,7 +77,7 @@ class Avaliations extends Component {
                                 { avaliations.empty
                                     ? (
                                         <Grow in={true}>
-                                            <Paper style={{width: 450, height: 100}}>
+                                            <Paper style={{width:500, height: 100}}>
                                                 <Grid container style={{flexGrow: 1, height:'100%'}} direction="column" justify="center" alignItems="center">
                                                     <Typography variant="body1" color="textSecondary">Nenhuma avaliação encontrada!</Typography>
                                                 </Grid>
@@ -89,7 +89,7 @@ class Avaliations extends Component {
                                             {avaliations.avaliations.map( (avaliation, index) => (
                                                 <div key={avaliation.id}>
                                                     <Grow in={true} timeout={500 + (index * 200)}>
-                                                        <Card style={{width:450, margin: 10}}>
+                                                        <Card style={{width:480, margin: 10}}>
                                                             <CardHeader
                                                                 avatar={
                                                                     <>
