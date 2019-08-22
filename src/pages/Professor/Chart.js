@@ -75,8 +75,6 @@ class ChartComponent extends Component {
         }
     })
 
-    console.log( dataAvaliations )
-
     const data = avaliations.length !== 0 
         ? dataAvaliations.filter( val => !!val )
         : [
