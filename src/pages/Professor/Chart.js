@@ -68,12 +68,14 @@ class ChartComponent extends Component {
     const { avaliations } = this.props;
     let dataAvaliations   = [];
     
-    avaliations.forEach( (avaliation, index, array) => {
+    avaliations.forEach( avaliation => {
         dataAvaliations[avaliation.avaliacao] = { 
             name: `${avaliation.avaliacao} ${avaliation.avaliacao === 1 ? "Estrela" : "Estrelas"}`,  
-            value: array[avaliation.avaliacao] ? array[avaliation.avaliacao]++ : 1
+            value: !!dataAvaliations[avaliation.avaliacao] ? (dataAvaliations[avaliation.avaliacao].value + 1) : 1
         }
     })
+
+    console.log( dataAvaliations )
 
     const data = avaliations.length !== 0 
         ? dataAvaliations.filter( val => !!val )
