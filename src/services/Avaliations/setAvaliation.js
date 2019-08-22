@@ -23,8 +23,9 @@ export default async ( {user_uid, professor_uid, anonimo, avaliacao, comentario,
 
     const timestamp     = firebase.firestore.Timestamp.now().toMillis();
 
-    const date          = new Date();
-    const DateString    = `${date.getDay()} de ${meses[date.getMonth()]}, ${date.getFullYear()}`;
+    const date          = new Date(timestamp);
+
+    const DateString    = `${date.getDate()} de ${meses[date.getMonth()]}, ${date.getFullYear()}`;
 
     const scores        = avaliations.map( avaliation => (avaliation.de !== user_uid ? +avaliation.avaliacao : null) ).filter( val => !!val );
     const scoresSum     = scores.length === 0 ? 0 : scores.reduce((sum, score) => sum + score );

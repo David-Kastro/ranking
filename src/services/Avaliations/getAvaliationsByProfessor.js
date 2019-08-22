@@ -30,7 +30,7 @@ const fetchResult   = ( result ) => {
         const avaliacaoData = avaliacao.data();
 
         const date          = new Date(avaliacaoData.criadoEm);
-        const DateString    = `${date.getDay()} de ${meses[date.getMonth()]}, ${date.getFullYear()}`;
+        const DateString    = `${date.getDate()} de ${meses[date.getMonth()]}, ${date.getFullYear()}`;
 
         data                = [ 
             ...data, 
