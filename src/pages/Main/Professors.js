@@ -5,7 +5,6 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
-import PersonIcon from '@material-ui/icons/Person';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -76,7 +75,7 @@ class Professors extends Component {
                                                         ? (<Avatar alt={professor.displayName} src={professor.photoURL} />)
                                                         : (
                                                             <Avatar alt={professor.displayName}>
-                                                                <PersonIcon />
+                                                                {professor.displayName.charAt(0)}
                                                             </Avatar>
                                                         )
                                                 }

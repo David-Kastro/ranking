@@ -2,11 +2,11 @@ import { createActions, createReducer } from 'reduxsauce';
 
 export const { Types, Creators } = createActions({
   LoadAvaliations        : [],
-  SetAvaliations         : ["avaliations"],
+  SetAvaliations         : ["avaliations", "uid"],
   UnsetAvaliations       : [],
 })
 
-const INITIAL_STATE = { avaliations: [], empty: true, loading: false };
+const INITIAL_STATE = { avaliations: [], empty: true, loading: false, yourAvaliation: null };
 
 const LoadAvaliations = ( state = INITIAL_STATE, action ) => {
     return { 
@@ -18,9 +18,10 @@ const LoadAvaliations = ( state = INITIAL_STATE, action ) => {
 const SetAvaliations = ( state = INITIAL_STATE, action ) => {
   return { 
     ...state,
-    avaliations : action.avaliations,
-    empty       : action.avaliations.length === 0,
-    loading     : false,
+    avaliations    : action.avaliations,
+    yourAvaliation : action.avaliations.filter(avaliation => avaliation.de === action.uid)[0],
+    empty          : action.avaliations.length === 0,
+    loading        : false,
   }
 }
 
@@ -28,9 +29,10 @@ const UnsetAvaliations = ( state = INITIAL_STATE, action ) => {
 
     return { 
       ...state,
-      avaliations  : [],
-      empty        : true,
-      loading      : false, 
+      avaliations    : [],
+      yourAvaliation : null,
+      empty          : true,
+      loading        : false, 
     }
 }
 

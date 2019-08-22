@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
-import { Grid, Paper, Typography, Grow, Avatar } from '@material-ui/core';
-
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
+import { Grid, Paper, Typography, Grow, Avatar, Card, CardHeader, CardContent } from '@material-ui/core';
+import { withTheme } from '@material-ui/styles';
 import Rating from '@material-ui/lab/Rating';
 
 import { connect } from 'react-redux';
@@ -29,106 +26,137 @@ class Avaliations extends Component {
 
     render() {
 
-        const { iterations }  = this.state;
-        const { avaliations } = this.props;
+        const { iterations }        = this.state;
+        const { avaliations, auth } = this.props;
 
         return (
             <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
-                <Grid container style={{flexGrow: 1, marginTop: 10, marginBottom: 10, paddingLeft: 60}} direction="row" alignItems="center">
+
+                <Grid container style={{flexGrow: 1, width: 500, marginTop: 10, marginBottom: 10}} direction="row" alignItems="center">
+
                     <Typography style={{marginRight: 10, color: '#999999'}} variant="h6">#</Typography>
-                    <Typography variant="h5" color="primary">Avaliações</Typography>
+                    <Typography variant="h5" color={avaliations.loading ? "textSecondary" : "primary"}>Avaliações</Typography>
+
                 </Grid>
+
                 <Grid item xs={12}>
                     <Grow in={true}>
-    
                         { avaliations.loading
-                            ? (
-                                <>
-                                    {iterations.map( (val, index) => (
-                                        <div key={val}>
-                                            <Grow in={true} timeout={500 + (index * 200)}>
-                                                <Card style={{width:500, margin: 10}}>
-                                                    <CardHeader
-                                                        avatar={
-                                                            <Avatar style={{backgroundColor: '#e6e6e6'}} />
-                                                        }
-                                                        action={
-                                                            <Grid container style={{flexGrow: 1}} direction="row" justify="flex-end" alignItems="center">
-                                                                <Rating size="small" value={0} readOnly disabled />
-                                                            </Grid>
-                                                        }
-                                                        title={
-                                                            <span style={{color: '#e6e6e6', backgroundColor: "#e6e6e6"}}>eeeeeeeee eeeeeee</span>
-                                                        }
-                                                    />
-                                                    <CardContent>
-                                                        <Typography variant="body2" style={{color: '#e6e6e6', backgroundColor: "#e6e6e6"}} component="span">
-                                                            eeeeeeeeeeeeeeeeeeee eeeeeeeeeeeeeeee e eeeeeee e eeee e eeeeee eeeeee eee eeeeeeeeeeeeee
-                                                        </Typography>
-                                                    </CardContent>
-                                                </Card>
-                                            </Grow>
-                                        </div> 
-                                    ))}
-                                </>
-                            )
+                            ? (<CommentCardLoading iterations={iterations} />)
                             : (
                                 <>
-                                { avaliations.empty
-                                    ? (
-                                        <Grow in={true}>
-                                            <Paper style={{width:500, height: 100}}>
-                                                <Grid container style={{flexGrow: 1, height:'100%'}} direction="column" justify="center" alignItems="center">
-                                                    <Typography variant="body1" color="textSecondary">Nenhuma avaliação encontrada!</Typography>
-                                                </Grid>
-                                            </Paper>
-                                        </Grow>
-                                    )
-                                    : (
-                                        <>
-                                            {avaliations.avaliations.map( (avaliation, index) => (
-                                                <div key={avaliation.id}>
-                                                    <Grow in={true} timeout={500 + (index * 200)}>
-                                                        <Card style={{width:480, margin: 10}}>
-                                                            <CardHeader
-                                                                avatar={
-                                                                    <>
-                                                                        {avaliation.usuarioInfo.photoURL 
-                                                                            ? (<Avatar alt={avaliation.usuarioInfo.displayName} src={avaliation.usuarioInfo.photoURL} />)
-                                                                            : (<Avatar alt={avaliation.usuarioInfo.displayName}> A </Avatar>)
-                                                                        }
-                                                                    </>
-                                                                }
-                                                                action={
-                                                                    <Grid container style={{flexGrow: 1}} direction="row" justify="flex-end" alignItems="center">
-                                                                        <Typography variant="body1" color="textSecondary">{(+avaliation.avaliacao).toFixed(1)}</Typography>
-                                                                        <Rating size="small" style={{marginLeft: 8}} value={+avaliation.avaliacao} readOnly />
-                                                                    </Grid>
-                                                                }
-                                                                title={avaliation.usuarioInfo.displayName}
-                                                                subheader={avaliation.criadoEm}
-                                                            />
-                                                            <CardContent>
-                                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                                    { avaliation.comentario ? this.ellipsisText(avaliation.comentario, 200) : ''}
-                                                                </Typography>
-                                                            </CardContent>
-                                                        </Card>
-                                                    </Grow>
-                                                </div> 
-                                            ))}
-                                        </>
-                                    )
-                                }
+                                    { avaliations.empty
+                                        ? <EmptyComments />
+                                        : (
+                                            <CommentCard 
+                                                comments={avaliations} 
+                                                ellipsis={(text, maxLenght) => this.ellipsisText(text, maxLenght)}
+                                                user={auth.user.uid}
+                                            />
+                                        )}
                                 </>
-                            ) 
-                        }
+                            )}
                     </Grow>
                 </Grid>
             </Grid>
         );
     }
 }
+
+const ProfessorThumb = ({ name, photo }) => (
+    <>
+        { photo 
+            ? <Avatar alt={name} src={photo} />
+            : <Avatar alt={name}> {name.charAt(0)} </Avatar>}
+    </>
+);
+
+const EmptyComments = () => (
+    <Grow in={true}>
+        <Paper style={{width:500, height: 100}}>
+            <Grid container style={{flexGrow: 1, height:'100%'}} direction="column" justify="center" alignItems="center">
+                <Typography variant="body1" color="textSecondary">Nenhuma avaliação encontrada!</Typography>
+            </Grid>
+        </Paper>
+    </Grow>
+);
+
+const CommentCardLoading = ({ iterations }) => (
+    <>
+        { iterations.map( (val, index) => (
+            <div key={val}>
+                <Grow in={true} timeout={500 + (index * 200)}>
+                    <Card style={{width:500, margin: 10}}>
+                        <CardHeader
+                            avatar={
+                                <Avatar style={{backgroundColor: '#e6e6e6'}} />
+                            }
+                            action={
+                                <Grid container style={{flexGrow: 1}} direction="row" justify="flex-end" alignItems="center">
+                                    <Rating size="small" value={0} readOnly disabled />
+                                </Grid>
+                            }
+                            title={
+                                <span style={{color: '#e6e6e6', backgroundColor: "#e6e6e6"}}>eeeeeeeee eeeeeee</span>
+                            }
+                        />
+                        <CardContent>
+                            <Typography variant="body2" style={{color: '#e6e6e6', backgroundColor: "#e6e6e6"}} component="span">
+                                eeeeeeeeeeeeeeeeeeee eeeeeeeeeeeeeeee e eeeeeee e eeee e eeeeee eeeeee eee eeeeeeeeeeeeee
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                </Grow>
+            </div> ))}
+    </>
+);
+
+const CommentCardComponent = ({ theme, comments, ellipsis, user }) => (
+
+    <>
+        { comments.avaliations.map( (avaliation, index) => (
+            <div key={avaliation.id}>
+                <Grow in={true} timeout={500 + (index * 200)}>
+                    <Card 
+                        style={{
+                            width:480, 
+                            margin: 10, 
+                            borderLeft: `solid 3px ${ 
+                                avaliation.de === user 
+                                    ? theme.palette.primary.main 
+                                    : (
+                                        avaliation.anonimo 
+                                            ? "#999999" 
+                                            : theme.palette.secondary.main )}`}}
+                    >
+                        <CardHeader
+                            avatar={
+                                <ProfessorThumb 
+                                    name={avaliation.usuarioInfo.displayName}
+                                    photo={avaliation.usuarioInfo.photoURL} 
+                                />
+                            }
+                            action={
+                                <Grid container style={{flexGrow: 1}} direction="row" justify="flex-end" alignItems="center">
+                                    <Rating size="small" value={+avaliation.avaliacao} readOnly />
+                                </Grid>
+                            }
+                            title={avaliation.usuarioInfo.displayName}
+                            subheader={avaliation.criadoEm}
+                        />
+                        <CardContent>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                { avaliation.comentario ? ellipsis(avaliation.comentario, 200) : ''}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                </Grow>
+            </div> ))}
+    </>
+
+);
+
+const CommentCard = withTheme( CommentCardComponent );
 
 const mapStateToProps = state => ({
     auth: state.authReducers,

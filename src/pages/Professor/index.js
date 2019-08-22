@@ -8,21 +8,25 @@ import { Creators as LoadingActions } from "../../store/ducks/_Loading";
 import { Creators as ProfessorsActions } from "../../store/ducks/_Professors";
 import { Creators as AvaliationsActions } from "../../store/ducks/_Avaliations";
 
-import getAvaliationsByProfessor from '../../services/Avaliations/getAvaliationsByProfessor'
+import getAvaliationsByProfessor from '../../services/Avaliations/getAvaliationsByProfessor';
 
 import ProfessorDetails from './ProfessorDetails';
 import Avaliations from './Avaliations';
+import AvaliationDialog from './AvaliationDialog';
 
 class Professor extends Component {
 
     state = {
-        professor: false,
+        showAvaliationDialog: false,
+        renderAvaliationDialog: false,
     }
 
     async componentDidMount() {
         const { 
             LoadAvaliations, 
-            SetAvaliations
+            SetAvaliations,
+            SetCurrentProfessor,
+            auth
         }              = this.props;
         const { uid }  = this.props.match.params;
 
@@ -30,29 +34,59 @@ class Professor extends Component {
 
         const getAvaliations  = await getAvaliationsByProfessor( uid );
 
-        SetAvaliations( getAvaliations );
+        await SetAvaliations( getAvaliations, auth.user.uid );
+        await SetCurrentProfessor( uid );
+
+        this.setState({
+            renderAvaliationDialog: true,
+        })
+    }
+
+    openAvaliation() {
+        const { currentProfessor } = this.props.professors;
+
+        if( !currentProfessor ) {
+            return;
+        }
+        
+        this.setState({
+            showAvaliationDialog: true
+        })
+    }
+
+    closeAvaliation() {
+        this.setState({
+            showAvaliationDialog: false
+        })
     }
 
     render() {
 
+        const { showAvaliationDialog }   = this.state;
+        const { renderAvaliationDialog } = this.state;
+
         return (
-            <Grid container style={{flexGrow: 1}} direction="row">
+            <>
+                <Grid container style={{flexGrow: 1}} direction="row">
 
-                <Grid item xs={12}>
+                    <Grid item xs={12}>
 
-                    <Grid container style={{flexGrow: 1}} direction="row">
-                        <Grid item xs={7}>
-                            <ProfessorDetails />
+                        <Grid container style={{flexGrow: 1}} direction="row">
+                            <Grid item xs={7}>
+                                <ProfessorDetails openAvaliation={() => this.openAvaliation()} />
+                            </Grid>
+
+                            <Grid item xs={5}>
+                                <Avaliations />
+                            </Grid>
                         </Grid>
 
-                        <Grid item xs={5}>
-                            <Avaliations />
-                        </Grid>
                     </Grid>
 
                 </Grid>
 
-            </Grid>
+                {renderAvaliationDialog ? <AvaliationDialog show={showAvaliationDialog} close={() => this.closeAvaliation()} /> : null}
+            </>
         );
     }
 }

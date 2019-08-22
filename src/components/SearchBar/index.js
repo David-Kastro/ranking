@@ -8,6 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import {Avatar, Tooltip, Zoom} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import PersonIcon from '@material-ui/icons/Person';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 
@@ -124,7 +125,8 @@ class SearchBar extends Component {
     }
 
     render() {
-        const { auth } = this.props;
+        const { auth, history } = this.props;
+        const { pathname }      = this.props.history.location;
 
         return (
           <>
@@ -133,9 +135,25 @@ class SearchBar extends Component {
                 ? (
                     <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
                       <Paper style={{display: 'flex', alignItems: 'center', width: 520, margin: 10}}>
-                          <IconButton style={{padding: 10}} aria-label="search">
-                              <SearchIcon />
-                          </IconButton>
+
+                          {
+                            pathname !== '/'
+                              ? (
+                                <Tooltip TransitionComponent={Zoom} title="Voltar ao Ranking">
+                                    <IconButton style={{padding: 10}} aria-label="goBack" onClick={() => history.push('/')}>
+                                        <ArrowBackIcon />
+                                    </IconButton>
+                                </Tooltip>
+                              )
+                              : (
+                                <Tooltip TransitionComponent={Zoom} title="Buscar Professor">
+                                  <IconButton style={{padding: 10}} aria-label="search">
+                                    <SearchIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              )
+                          }
+                          
                           <InputBase
                               style={{marginLeft: 8, flex: 1}}
                               placeholder="Buscar professor"

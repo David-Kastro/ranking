@@ -3,7 +3,7 @@ import { createActions, createReducer } from 'reduxsauce';
 export const { Types, Creators } = createActions({
   LoadProfessors        : [],
   SetProfessors         : ["professors"],
-  SetCurrentProfessor   : ["professor"],
+  SetCurrentProfessor   : ["uid", "professor"],
   UnsetCurrentProfessor : [],
 })
 
@@ -27,9 +27,13 @@ const SetProfessors = ( state = INITIAL_STATE, action ) => {
 
 const SetCurrentProfessor = ( state = INITIAL_STATE, action ) => {
 
+  const professorData = action.professor
+    ? action.professor
+    : state.professors.filter( professor => professor.uid === action.uid )[0];
+
   return { 
     ...state,
-    currentProfessor : action.professors,
+    currentProfessor : professorData,
     loading          : false, 
   }
 

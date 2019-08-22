@@ -29,10 +29,7 @@ const fetchResult   = ( result ) => {
         const { id }        = avaliacao;
         const avaliacaoData = avaliacao.data();
 
-        const date          = new Date(avaliacaoData.criadoEm.seconds * 1000);
-        // const Hours         = date.getHours()   < 10 ? '0' +  date.getHours()   : date.getHours();
-        // const Minutes       = date.getMinutes() < 10 ? '0' +  date.getMinutes() : date.getMinutes();
-
+        const date          = new Date(avaliacaoData.criadoEm);
         const DateString    = `${date.getDay()} de ${meses[date.getMonth()]}, ${date.getFullYear()}`;
 
         data                = [ 
