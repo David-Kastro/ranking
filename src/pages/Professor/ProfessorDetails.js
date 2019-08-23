@@ -25,7 +25,7 @@ class ProfessorDetails extends Component {
 
     render() {
         const { currentProfessor }     = this.props.professors;
-        const { loading, avaliations } = this.props.avaliations;
+        const { loading, avaliations, yourAvaliation } = this.props.avaliations;
         const { openAvaliation }       = this.props;
 
         return (
@@ -37,104 +37,98 @@ class ProfessorDetails extends Component {
                         <Fade in={loading}>
                             <LinearProgress color="primary" />
                         </Fade>
-                        {
-                            loading
-                                ? (null)
-                                : (
-                                    <>
-                                        {
-                                            currentProfessor
-                                                ? (
-                                                    <Grow in={true} timeout={500}>
-                                                        <>
-                                                            <CardHeader
-                                                                avatar={
-                                                                    <>
-                                                                        {  
-                                                                            currentProfessor.photoURL
-                                                                                ? (<Avatar alt={currentProfessor.displayName} src={currentProfessor.photoURL} style={{width: 60, height: 60}} />)
-                                                                                : (
-                                                                                    <Avatar alt={currentProfessor.displayName} style={{width: 60, height: 60}}>
-                                                                                        <span style={{fontSize: 30}}>{currentProfessor.displayName.charAt(0)}</span>
-                                                                                    </Avatar>
-                                                                                )
-                                                                        }
-                                                                    </>
-                                                                }
-                                                                action={
-                                                                    <Button variant="outlined" color="primary" onClick={() => openAvaliation()} >Avaliar Este Professor</Button>
-                                                                }
-                                                                title={
-                                                                    <Typography variant="body1" color="textSecondary">{currentProfessor.displayName}</Typography>
-                                                                }
-                                                            />
-                                                            <CardContent>
-                                                                    <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
-                                                                        <Grid item xs={12} style={{marginTop: 10, marginBottom: 10}}>
-                                                                            <Typography variant="body2" color="textSecondary" component="p">
-                                                                                {currentProfessor.bio}
-                                                                            </Typography>
-                                                                        </Grid>
-                                                                        <Grid item xs={12} style={{marginTop: 10, width: '100%'}}>
-                                                                            <Grid container style={{flexGrow: 1}} direction="row" justify="space-evenly" alignItems="center">
-                                                                                <Grid item xs={4}>
-                                                                                    <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
-                                                                                        <Typography variant="subtitle2">Avaliações</Typography>
-                                                                                        <Typography variant="h6" color="primary">{avaliations.length}</Typography>
-                                                                                    </Grid>
-                                                                                </Grid>
-                                                                                <Grid item xs={4}>
-                                                                                    <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
-                                                                                        <Typography variant="subtitle2">Avaliação</Typography>
-                                                                                        <Typography variant="h6" color="primary">{(currentProfessor.avaliacao).toFixed(1)}</Typography>
-                                                                                    </Grid>
-                                                                                </Grid>
-                                                                                <Grid item xs={4}>
-                                                                                    <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
-                                                                                        <Typography variant="subtitle2">Ranking</Typography>
-                                                                                        <Typography variant="h6" color="primary">{currentProfessor.rank}</Typography>
-                                                                                    </Grid>
-                                                                                </Grid>
-                                                                            </Grid>
-                                                                        </Grid>
-                                                                        <Grid item xs={12} style={{marginTop: 40, width: '100%'}}>
-                                                                            <Divider></Divider>
+                        { loading
+                            ? (null)
+                            : (
+                                <>
+                                    { currentProfessor
+                                        ? (
+                                            <Grow in={true} timeout={500}>
+                                                <>
+                                                    <CardHeader
+                                                        avatar={
+                                                            <>
+                                                                { currentProfessor.photoURL
+                                                                    ? (<Avatar alt={currentProfessor.displayName} src={currentProfessor.photoURL} style={{width: 60, height: 60}} />)
+                                                                    : (
+                                                                        <Avatar alt={currentProfessor.displayName} style={{width: 60, height: 60}}>
+                                                                            <span style={{fontSize: 30}}>{currentProfessor.displayName.charAt(0)}</span>
+                                                                        </Avatar>
+                                                                    )}
+                                                            </>
+                                                        }
+                                                        action={
+                                                            <Button variant="outlined" color="primary" onClick={() => openAvaliation()} >{ yourAvaliation ? "Mudar Avaliação" : "Avaliar Este Professor"}</Button>
+                                                        }
+                                                        title={
+                                                            <Typography variant="body1" color="textSecondary">{currentProfessor.displayName}</Typography>
+                                                        }
+                                                    />
+                                                    <CardContent>
+                                                            <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
+                                                                <Grid item xs={12} style={{marginTop: 10, marginBottom: 10}}>
+                                                                    <Typography variant="body2" color="textSecondary" component="p">
+                                                                        {currentProfessor.bio}
+                                                                    </Typography>
+                                                                </Grid>
+                                                                <Grid item xs={12} style={{marginTop: 10, width: '100%'}}>
+                                                                    <Grid container style={{flexGrow: 1}} direction="row" justify="space-evenly" alignItems="center">
+                                                                        <Grid item xs={4}>
                                                                             <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
-                                                                                <div style={{backgroundColor: 'white', marginTop: -15}}>
-                                                                                    <PieChartIcon color="disabled" style={{width: 30, height: 30, paddingRight: 5, paddingLeft: 5}} />
-                                                                                </div>
+                                                                                <Typography variant="subtitle2">Avaliações</Typography>
+                                                                                <Typography variant="h6" color="primary">{avaliations.length}</Typography>
                                                                             </Grid>
                                                                         </Grid>
-                                                                        <Grid item xs={12} style={{width: '100%'}}>
-                                                                            <Grid container style={{flexGrow: 1, minHeight: 300}} direction="column" justify="center" alignItems="center">
-                                                                                
-                                                                                {this.state.loadChart 
-                                                                                    ? (
-                                                                                        
-                                                                                        <Chart avaliations={avaliations} />
-                                                                                        
-                                                                                    ) 
-                                                                                    : <CircularProgress color="primary"></CircularProgress>}
-                                                                        
+                                                                        <Grid item xs={4}>
+                                                                            <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
+                                                                                <Typography variant="subtitle2">Avaliação</Typography>
+                                                                                <Typography variant="h6" color="primary">{(currentProfessor.avaliacao).toFixed(1)}</Typography>
                                                                             </Grid>
                                                                         </Grid>
-
+                                                                        <Grid item xs={4}>
+                                                                            <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
+                                                                                <Typography variant="subtitle2">Ranking</Typography>
+                                                                                <Typography variant="h6" color="primary">{currentProfessor.rank}</Typography>
+                                                                            </Grid>
+                                                                        </Grid>
                                                                     </Grid>
-                                                            </CardContent>
-                                                        </>
-                                                    </Grow>
-                                                )
-                                                : (
-                                                    <Grow in={true} timeout={500}>
-                                                        <Grid container style={{flexGrow: 1, height: 600}} direction="column" justify="center" alignItems="center">
-                                                            <Typography variant="h5" component="p" color="textSecondary">Não foi possível obter dados desse professor</Typography>
-                                                        </Grid>
-                                                    </Grow>
-                                                )
-                                        }
-                                    </>
-                                )
-                        }
+                                                                </Grid>
+                                                                <Grid item xs={12} style={{marginTop: 40, width: '100%'}}>
+                                                                    <Divider></Divider>
+                                                                    <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
+                                                                        <div style={{backgroundColor: 'white', marginTop: -15}}>
+                                                                            <PieChartIcon color="disabled" style={{width: 30, height: 30, paddingRight: 5, paddingLeft: 5}} />
+                                                                        </div>
+                                                                    </Grid>
+                                                                </Grid>
+                                                                <Grid item xs={12} style={{width: '100%'}}>
+                                                                    <Grid container style={{flexGrow: 1, minHeight: 300}} direction="column" justify="center" alignItems="center">
+                                                                        
+                                                                        { this.state.loadChart 
+                                                                            ? (
+                                                                                
+                                                                                <Chart avaliations={avaliations} />
+                                                                                
+                                                                            ) 
+                                                                            : <CircularProgress color="primary"></CircularProgress>}
+                                                                
+                                                                    </Grid>
+                                                                </Grid>
+
+                                                            </Grid>
+                                                    </CardContent>
+                                                </>
+                                            </Grow>
+                                        )
+                                        : (
+                                            <Grow in={true} timeout={500}>
+                                                <Grid container style={{flexGrow: 1, height: 600}} direction="column" justify="center" alignItems="center">
+                                                    <Typography variant="h5" component="p" color="textSecondary">Não foi possível obter dados desse professor</Typography>
+                                                </Grid>
+                                            </Grow>
+                                        )}
+                                </>
+                            )}
                     </Card>
 
                 </Grow>

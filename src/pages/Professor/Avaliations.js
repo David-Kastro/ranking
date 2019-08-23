@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { Grid, Paper, Typography, Grow, Avatar, Card, CardHeader, CardContent } from '@material-ui/core';
+import { Grid, Paper, Typography, Grow, Avatar, Card, CardHeader, CardContent, IconButton, CardActions, Tooltip, Zoom } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
 import { withTheme } from '@material-ui/styles';
 import Rating from '@material-ui/lab/Rating';
 
@@ -27,7 +28,7 @@ class Avaliations extends Component {
     render() {
 
         const { iterations }        = this.state;
-        const { avaliations, auth } = this.props;
+        const { openAvaliation, avaliations, auth } = this.props;
 
         return (
             <Grid container style={{flexGrow: 1}} direction="column" justify="center" alignItems="center">
@@ -51,6 +52,7 @@ class Avaliations extends Component {
                                             <CommentCard 
                                                 comments={avaliations} 
                                                 ellipsis={(text, maxLenght) => this.ellipsisText(text, maxLenght)}
+                                                editAvaliation={() => openAvaliation()}
                                                 user={auth.user.uid}
                                             />
                                         )}
@@ -111,7 +113,11 @@ const CommentCardLoading = ({ iterations }) => (
     </>
 );
 
-const CommentCardComponent = ({ theme, comments, ellipsis, user }) => (
+// {/* <IconButton color="primary" aria-label="edit">
+//     <EditIcon />
+// </IconButton> */}
+
+const CommentCardComponent = ({ theme, comments, ellipsis, editAvaliation, user }) => (
 
     <>
         { comments.avaliations.map( (avaliation, index) => (
@@ -127,7 +133,8 @@ const CommentCardComponent = ({ theme, comments, ellipsis, user }) => (
                                     : (
                                         avaliation.anonimo 
                                             ? "#999999" 
-                                            : theme.palette.secondary.main )}`}}
+                                            : theme.palette.secondary.main )}`
+                        }}
                     >
                         <CardHeader
                             avatar={
@@ -149,6 +156,18 @@ const CommentCardComponent = ({ theme, comments, ellipsis, user }) => (
                                 { avaliation.comentario ? ellipsis(avaliation.comentario, 200) : ''}
                             </Typography>
                         </CardContent>
+                        {avaliation.de === user
+                            ? (
+                                <CardActions style={{justifyContent:"flex-end"}}>
+                                    <Tooltip TransitionComponent={Zoom} placement="left" title="Editar sua avaliação" style={{marginTop: -30}}>
+                                        <IconButton color="primary" aria-label="edit" size="small" onClick={() => editAvaliation()}>
+                                            <EditIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </CardActions>
+                            )
+                            : null
+                        }
                     </Card>
                 </Grow>
             </div> ))}

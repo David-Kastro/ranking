@@ -77,7 +77,7 @@ class Professor extends Component {
                             </Grid>
 
                             <Grid item xs={5}>
-                                <Avaliations />
+                                <Avaliations openAvaliation={() => this.openAvaliation()} />
                             </Grid>
                         </Grid>
 
