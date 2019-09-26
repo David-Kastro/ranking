@@ -234,7 +234,7 @@ class SignIn extends Component {
 
 		return (
 
-			<Grid container style={styles.container} direction="column" align="center" justify="center">
+			<Grid container style={styles.container} direction="column" align="center" alignItems="center" justify="center">
 
 				<Fade in={load.isLoadingFinished} timeout={{enter: 1000}}>
 					<div>
